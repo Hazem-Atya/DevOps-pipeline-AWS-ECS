@@ -9,7 +9,7 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",
