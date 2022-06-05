@@ -1,15 +1,44 @@
 name: DevOps pipeline
 on: [push]
+# this event is for all the workflow (all the jobs)
 jobs:
+  # This is our first job
   Test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3         # uses: an already existing action and run for linux commands
-        # checkout clones the code in the environment wehre the job is going to be runs
+  # checkout clones the code in the environment wehre the job is going to be runs
+  # actions/checkout@v3: actions: username of the github user
+  #                     checkout: repo name
+  #                     v3: tag (after the @ we put a ref, it can be a tag, 
+  #                                                     commit or hash or a branch)                      
       - uses: actions/setup-node@v3 # install node in the env (ubuntu-latest in this case)
         with:
           node-version: 14
       - run: npm install     
       - run: npm test
+  Package:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout 
+        uses: actions/checkout@v3
+      
+      - name: Login to Docker Hub 
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      -
+        name: Set up Docker Buildx   # The builder, this is where docker is going to be installed
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true     # will it push or just build
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:latest # tag of the image
+
 
