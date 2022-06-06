@@ -41,6 +41,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true     # will it push or just build
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devops-pipeline:latest # tag of the image
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devops-pipeline:${{ github.sha }} # tag of the image
 
 
